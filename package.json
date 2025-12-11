@@ -1,0 +1,35 @@
+{
+  "name": "messenger-desktop",
+  "productName": "Messengerify",
+  "version": "1.0.0",
+  "description": "Unofficial desktop wrapper for Messenger.com",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac"
+  },
+  "keywords": ["messenger", "electron", "desktop"],
+  "author": "",
+  "license": "MIT",
+  "build": {
+    "appId": "com.messengerify.app",
+    "productName": "Messengerify",
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "icon.icns",
+      "target": ["dmg", "zip"]
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "icon.icns"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-reloader": "^1.2.3"
+  }
+}
