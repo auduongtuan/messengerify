@@ -1,11 +1,12 @@
-const { app, BrowserWindow, screen } = require('electron');
+import { app, BrowserWindow, screen } from 'electron';
+import * as path from 'path';
 
 // Enable hot reload in development
 try {
   require('electron-reloader')(module);
 } catch (_) {}
 
-function createWindow() {
+function createWindow(): void {
   // Get screen size and calculate window dimensions
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
 
@@ -19,7 +20,7 @@ function createWindow() {
     frame: false,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
-    icon: __dirname + '/icon.icns',
+    icon: path.join(__dirname, '../assets/icon.icns'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

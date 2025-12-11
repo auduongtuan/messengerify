@@ -3,12 +3,13 @@
   "productName": "Messengerify",
   "version": "1.0.0",
   "description": "Unofficial desktop wrapper for Messenger.com",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron .",
-    "build": "electron-builder",
-    "build:mac": "electron-builder --mac"
+    "compile": "tsc",
+    "start": "npm run compile && electron .",
+    "dev": "npm run compile && electron .",
+    "build": "npm run compile && electron-builder",
+    "build:mac": "npm run compile && electron-builder --mac"
   },
   "keywords": ["messenger", "electron", "desktop"],
   "author": "",
@@ -18,18 +19,21 @@
     "productName": "Messengerify",
     "mac": {
       "category": "public.app-category.social-networking",
-      "icon": "icon.icns",
+      "icon": "assets/icon.icns",
       "target": ["dmg", "zip"]
     },
     "files": [
-      "main.js",
-      "package.json",
-      "icon.icns"
+      "dist/**/*",
+      "assets/**/*",
+      "package.json"
     ]
   },
   "devDependencies": {
+    "@types/node": "^25.0.0",
     "electron": "^39.2.6",
     "electron-builder": "^26.0.12",
-    "electron-reloader": "^1.2.3"
+    "electron-reloader": "^1.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
