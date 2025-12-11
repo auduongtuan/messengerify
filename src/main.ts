@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, shell } from 'electron';
 import * as path from 'path';
 
 // Enable hot reload in development
@@ -34,6 +34,28 @@ function createWindow(): void {
 
   win.loadURL('https://www.messenger.com');
 
+  // Open external links in default browser
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    // If it's a messenger.com URL, allow it in the app
+    if (url.startsWith('https://www.messenger.com') || url.startsWith('https://messenger.com')) {
+      return { action: 'allow' };
+    }
+    // Otherwise, open in external browser
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
+  // Handle navigation attempts (clicking links)
+  win.webContents.on('will-navigate', (event, url) => {
+    // Allow navigation within messenger.com
+    if (url.startsWith('https://www.messenger.com') || url.startsWith('https://messenger.com')) {
+      return;
+    }
+    // Prevent navigation and open in external browser instead
+    event.preventDefault();
+    shell.openExternal(url);
+  });
+
   // Add draggable area at the top and hide feed section
   win.webContents.on('did-finish-load', () => {
     // Add draggable area and margin to inbox switcher
@@ -56,6 +78,10 @@ function createWindow(): void {
 
       [aria-label="Inbox switcher"][role="navigation"] > div {
         margin-top: 0 !important;
+      }
+
+      div[aria-label="Media viewer"] div[aria-label="Close"] {
+        margin-top: 24px;
       }
     `);
 
