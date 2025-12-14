@@ -1,7 +1,7 @@
 {
   "name": "messenger-desktop",
   "productName": "Messengerify",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Unofficial desktop wrapper for Messenger.com",
   "main": "dist/main.js",
   "scripts": {
