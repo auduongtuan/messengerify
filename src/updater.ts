@@ -38,7 +38,8 @@ export async function checkForUpdates(): Promise<UpdateInfo | null> {
     if (compareVersions(currentVersion, latestVersion)) {
       // Find the appropriate asset for the current platform/architecture
       const arch = process.arch; // 'arm64' or 'x64'
-      const assetName = `Messengerify-${latestVersion}-${arch}-mac.zip`;
+      // Prefer DMG for better UX (drag-to-Applications interface)
+      const assetName = `Messengerify-${latestVersion}-${arch}.dmg`;
 
       const asset = release.assets.find(a => a.name === assetName);
 

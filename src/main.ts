@@ -271,7 +271,7 @@ app.whenReady().then(() => {
             type: 'info',
             title: 'Update Downloaded',
             message: `Messengerify ${version} is ready to install`,
-            detail: 'Installation steps:\n\n1. Click "Install & Quit" below\n2. Open the downloaded file\n3. Drag Messengerify to Applications folder\n4. Launch the updated app\n\nThe current app will quit to allow replacement.',
+            detail: 'Installation steps:\n\n1. Click "Install & Quit" below\n2. The installer will open\n3. Drag Messengerify to Applications folder (replace existing)\n4. Launch the updated app\n\nThe current app will quit to allow replacement.',
             buttons: ['Install & Quit', 'Later'],
             defaultId: 0,
             cancelId: 1
