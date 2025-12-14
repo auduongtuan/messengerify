@@ -1,20 +1,11 @@
-import { app, BrowserWindow, screen, shell, Menu, clipboard } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, screen, shell, Menu, clipboard, dialog } from 'electron';
 import * as path from 'path';
-
-// Feature flags
-const ENABLE_AUTO_UPDATES = false; // Set to true when you have code signing
+import { checkForUpdates, downloadUpdate } from './updater';
 
 // Enable hot reload in development
 try {
   require('electron-reloader')(module);
 } catch (_) {}
-
-// Configure auto-updater (only if enabled and code-signed)
-if (ENABLE_AUTO_UPDATES) {
-  autoUpdater.autoDownload = true;
-  autoUpdater.autoInstallOnAppQuit = true;
-}
 
 // Use separate userData directory for development to avoid conflicts
 if (!app.isPackaged) {
@@ -255,33 +246,48 @@ function createWindow(): void {
 app.whenReady().then(() => {
   createWindow();
 
-  // Check for updates (only if enabled and in production)
-  if (ENABLE_AUTO_UPDATES && app.isPackaged) {
-    autoUpdater.checkForUpdatesAndNotify();
+  // Check for updates (only in production)
+  if (app.isPackaged) {
+    // Wait 5 seconds after startup before checking for updates
+    setTimeout(async () => {
+      try {
+        console.log('Checking for updates...');
+        const updateInfo = await checkForUpdates();
 
-    autoUpdater.on('checking-for-update', () => {
-      console.log('Checking for updates...');
-    });
+        if (updateInfo) {
+          const { version, downloadUrl, fileName } = updateInfo;
+          console.log(`Update available: ${version}`);
 
-    autoUpdater.on('update-available', (info) => {
-      console.log('Update available:', info.version);
-    });
+          // Download to temp directory
+          const tempDir = app.getPath('temp');
+          const filePath = path.join(tempDir, fileName);
 
-    autoUpdater.on('update-not-available', (info) => {
-      console.log('Update not available:', info.version);
-    });
+          console.log(`Downloading update to ${filePath}...`);
+          await downloadUpdate(downloadUrl, filePath);
+          console.log('Download complete!');
 
-    autoUpdater.on('download-progress', (progressObj) => {
-      console.log(`Download progress: ${progressObj.percent.toFixed(2)}%`);
-    });
+          // Show dialog
+          const response = await dialog.showMessageBox({
+            type: 'info',
+            title: 'Update Available',
+            message: `Version ${version} is ready to install`,
+            detail: 'The update has been downloaded. Click "Install" to open the installer.',
+            buttons: ['Install Now', 'Show in Finder', 'Later'],
+            defaultId: 0
+          });
 
-    autoUpdater.on('update-downloaded', (info) => {
-      console.log('Update downloaded, will install on quit:', info.version);
-    });
-
-    autoUpdater.on('error', (err) => {
-      console.error('Update error:', err);
-    });
+          if (response.response === 0) {
+            // Install now - open DMG/ZIP
+            shell.openPath(filePath);
+          } else if (response.response === 1) {
+            // Show in Finder
+            shell.showItemInFolder(filePath);
+          }
+        }
+      } catch (error) {
+        console.error('Update check failed:', error);
+      }
+    }, 5000);
   }
 
   app.on('activate', () => {

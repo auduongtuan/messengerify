@@ -5,6 +5,7 @@ Unofficial desktop wrapper for Messenger.com built with Electron and TypeScript.
 ## Features
 
 - **Native Desktop Experience**: Run Messenger as a standalone desktop application
+- **Custom Auto-Updates**: Checks for updates on startup and downloads them automatically (no code signing required!)
 - **Single Instance Lock**: Prevents multiple instances from running simultaneously
 - **Custom Window Controls**: Frameless window with custom draggable title bar
 - **Persistent Sessions**: Your login session is saved between app restarts
@@ -115,18 +116,17 @@ This will create distributable files in the `release/` directory:
 - `.dmg` installer
 - `.zip` portable version
 
-Users download new versions manually from [GitHub Releases](https://github.com/auduongtuan/messengerify/releases).
+### Auto-Updates
 
-### Enabling Auto-Updates (Optional)
+The app includes a **custom auto-updater that works without code signing**! 🎉
 
-Auto-updates are implemented but disabled by default (requires code signing).
+**How it works**:
+- Checks GitHub Releases on startup (5 seconds delay)
+- Automatically downloads updates when available
+- Shows a dialog with "Install Now" / "Show in Finder" / "Later" options
+- User clicks to install - no automatic execution for security
 
-**To enable**:
-1. Get an Apple Developer account ($99/year) and set up code signing
-2. Set `ENABLE_AUTO_UPDATES = true` in `src/main.ts`
-3. Build with `npm run build:mac`
-
-Once enabled, the app will automatically download and install updates on quit.
+This provides a great update experience without requiring a $99/year Apple Developer account!
 
 ## Project Structure
 
@@ -145,11 +145,12 @@ messengerify/
 
 - **Framework**: Electron v39
 - **Language**: TypeScript 5.9
+- **Auto-Updates**: Custom implementation using GitHub Releases API (no code signing needed)
 - **Target**: ES2020
 - **Module System**: CommonJS
 - **Window Style**: Frameless with hidden title bar
 - **Session Storage**: Persistent partition (`persist:messenger`, separate for dev/prod)
-- **Security**: Context isolation enabled, Node integration disabled
+- **Security**: Context isolation enabled, Node integration disabled, SHA512 checksum verification
 - **Single Instance**: Prevents multiple app instances from conflicting
 
 ## Keyboard Shortcuts

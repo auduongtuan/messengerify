@@ -1,23 +1,16 @@
 {
   "name": "messenger-desktop",
-  "productName": "Messengerify",
   "version": "0.0.1",
-  "description": "Unofficial desktop wrapper for Messenger.com",
-  "main": "dist/main.js",
-  "scripts": {
-    "compile": "tsc",
-    "start": "npm run compile && electron .",
-    "dev": "npm run compile && electron .",
-    "build": "npm run compile && electron-builder",
-    "build:mac": "npm run compile && electron-builder --mac",
-    "release": "npm run compile && electron-builder --mac --publish always",
-    "version:patch": "npm version patch && git push --follow-tags",
-    "version:minor": "npm version minor && git push --follow-tags",
-    "version:major": "npm version major && git push --follow-tags"
-  },
-  "keywords": ["messenger", "electron", "desktop"],
   "author": "",
-  "license": "MIT",
+  "main": "dist/main.js",
+  "devDependencies": {
+    "@types/node": "^25.0.0",
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-reloader": "^1.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
   "build": {
     "appId": "com.messengerify.app",
     "productName": "Messengerify",
@@ -49,15 +42,19 @@
       "buildResources": "assets"
     }
   },
-  "devDependencies": {
-    "@types/node": "^25.0.0",
-    "electron": "^39.2.6",
-    "electron-builder": "^26.0.12",
-    "electron-reloader": "^1.2.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "electron-updater": "^6.6.2"
+  "description": "Unofficial desktop wrapper for Messenger.com",
+  "keywords": ["messenger", "electron", "desktop"],
+  "license": "MIT",
+  "productName": "Messengerify",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && electron .",
+    "dev": "npm run compile && electron .",
+    "build": "npm run compile && electron-builder",
+    "build:mac": "npm run compile && electron-builder --mac",
+    "release": "npm run compile && electron-builder --mac --publish always",
+    "version:patch": "npm version patch && git push --follow-tags",
+    "version:minor": "npm version minor && git push --follow-tags",
+    "version:major": "npm version major && git push --follow-tags"
   }
 }
