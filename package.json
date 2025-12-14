@@ -24,7 +24,14 @@
     "mac": {
       "category": "public.app-category.social-networking",
       "icon": "assets/icon.icns",
-      "target": ["dmg", "zip"]
+      "target": ["dmg", "zip"],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "Let Messengerify control other applications",
+        "NSCameraUsageDescription": "Let Messengerify use your camera for video calls",
+        "NSMicrophoneUsageDescription": "Let Messengerify use your microphone for calls"
+      }
     },
     "files": [
       "dist/**/*",
@@ -40,11 +47,6 @@
     "directories": {
       "output": "release",
       "buildResources": "assets"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "auduongtuan",
-      "repo": "messengerify"
     }
   },
   "devDependencies": {
@@ -52,8 +54,10 @@
     "electron": "^39.2.6",
     "electron-builder": "^26.0.12",
     "electron-reloader": "^1.2.3",
-    "electron-updater": "^6.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
   }
 }

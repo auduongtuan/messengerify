@@ -5,7 +5,6 @@ Unofficial desktop wrapper for Messenger.com built with Electron and TypeScript.
 ## Features
 
 - **Native Desktop Experience**: Run Messenger as a standalone desktop application
-- **Auto-Updates**: Silent background updates with automatic installation on quit
 - **Single Instance Lock**: Prevents multiple instances from running simultaneously
 - **Custom Window Controls**: Frameless window with custom draggable title bar
 - **Persistent Sessions**: Your login session is saved between app restarts
@@ -100,36 +99,34 @@ bun build
 
 ## Publishing Releases
 
-### Setup GitHub Token
-
-```bash
-# Get token from gh CLI
-gh auth token
-
-# Add to .env file (already in .gitignore)
-echo "GH_TOKEN=your_token_here" > .env
-```
-
 ### Version & Release Workflow
 
 ```bash
 # 1. Bump version (choose one)
-npm run version:patch   # Bug fixes (1.0.0 → 1.0.1)
-npm run version:minor   # New features (1.0.0 → 1.1.0)
-npm run version:major   # Breaking changes (1.0.0 → 2.0.0)
+npm run version:patch   # Bug fixes (0.0.1 → 0.0.2)
+npm run version:minor   # New features (0.0.1 → 0.1.0)
+npm run version:major   # Breaking changes (0.0.1 → 1.0.0)
 
-# 2. Publish to GitHub Releases
-source .env && npm run release
+# 2. Build the app
+npm run build:mac
 ```
 
-This will:
-- Compile TypeScript
-- Build the macOS app
-- Create a GitHub Release with the version tag
-- Upload installers (.dmg, .zip)
-- Generate auto-update metadata
+This will create distributable files in the `release/` directory:
+- `.dmg` installer
+- `.zip` portable version
 
-For detailed information about auto-updates and migration to private servers, see [UPDATES.md](./UPDATES.md).
+Users download new versions manually from [GitHub Releases](https://github.com/auduongtuan/messengerify/releases).
+
+### Enabling Auto-Updates (Optional)
+
+Auto-updates are implemented but disabled by default (requires code signing).
+
+**To enable**:
+1. Get an Apple Developer account ($99/year) and set up code signing
+2. Set `ENABLE_AUTO_UPDATES = true` in `src/main.ts`
+3. Build with `npm run build:mac`
+
+Once enabled, the app will automatically download and install updates on quit.
 
 ## Project Structure
 
@@ -148,7 +145,6 @@ messengerify/
 
 - **Framework**: Electron v39
 - **Language**: TypeScript 5.9
-- **Auto-Updates**: electron-updater v6.6 (GitHub Releases)
 - **Target**: ES2020
 - **Module System**: CommonJS
 - **Window Style**: Frameless with hidden title bar

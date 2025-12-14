@@ -2,14 +2,19 @@ import { app, BrowserWindow, screen, shell, Menu, clipboard } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 
+// Feature flags
+const ENABLE_AUTO_UPDATES = false; // Set to true when you have code signing
+
 // Enable hot reload in development
 try {
   require('electron-reloader')(module);
 } catch (_) {}
 
-// Configure auto-updater
-autoUpdater.autoDownload = true; // Download updates automatically
-autoUpdater.autoInstallOnAppQuit = true; // Install on quit
+// Configure auto-updater (only if enabled and code-signed)
+if (ENABLE_AUTO_UPDATES) {
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+}
 
 // Use separate userData directory for development to avoid conflicts
 if (!app.isPackaged) {
@@ -250,17 +255,10 @@ function createWindow(): void {
 app.whenReady().then(() => {
   createWindow();
 
-  // Check for updates (only in production)
-  if (app.isPackaged) {
-    // Check for updates on startup
+  // Check for updates (only if enabled and in production)
+  if (ENABLE_AUTO_UPDATES && app.isPackaged) {
     autoUpdater.checkForUpdatesAndNotify();
 
-    // Check for updates every 4 hours (commented out - only check on startup)
-    // setInterval(() => {
-    //   autoUpdater.checkForUpdates();
-    // }, 4 * 60 * 60 * 1000);
-
-    // Update event handlers
     autoUpdater.on('checking-for-update', () => {
       console.log('Checking for updates...');
     });
