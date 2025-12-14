@@ -29,8 +29,18 @@
     "files": [
       "dist/**/*",
       "assets/**/*",
-      "package.json"
+      "package.json",
+      "!**/*.ts",
+      "!src",
+      "!*.md",
+      "!.env*",
+      "!tsconfig.json"
     ],
+    "asarUnpack": [],
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
     "publish": {
       "provider": "github",
       "owner": "auduongtuan",
