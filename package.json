@@ -1,6 +1,6 @@
 {
   "name": "messenger-desktop",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "",
   "main": "dist/main.js",
   "devDependencies": {
@@ -17,7 +17,10 @@
     "mac": {
       "category": "public.app-category.social-networking",
       "icon": "assets/icon.icns",
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extendInfo": {
@@ -43,7 +46,11 @@
     }
   },
   "description": "Unofficial desktop wrapper for Messenger.com",
-  "keywords": ["messenger", "electron", "desktop"],
+  "keywords": [
+    "messenger",
+    "electron",
+    "desktop"
+  ],
   "license": "MIT",
   "productName": "Messengerify",
   "scripts": {
