@@ -18,6 +18,21 @@ Unofficial desktop wrapper for Messenger.com built with Electron and TypeScript.
 
 ## Installation
 
+### For End Users
+
+**Download the latest release**: [GitHub Releases](https://github.com/auduongtuan/messengerify/releases/latest)
+
+**macOS Security Note**: Since the app is unsigned, macOS will block it on first launch. To install:
+1. Download the DMG
+2. Open it and drag Messengerify to Applications
+3. **Right-click** the app and select **"Open"** (don't double-click!)
+4. Click **"Open"** in the dialog
+5. App will launch successfully
+
+After the first launch, you can open it normally. Future updates will install automatically!
+
+### For Developers
+
 ### Prerequisites
 
 - Node.js (v16 or higher)
