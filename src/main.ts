@@ -266,22 +266,25 @@ app.whenReady().then(() => {
           await downloadUpdate(downloadUrl, filePath);
           console.log('Download complete!');
 
-          // Show dialog
+          // Show dialog with installation instructions
           const response = await dialog.showMessageBox({
             type: 'info',
-            title: 'Update Available',
-            message: `Version ${version} is ready to install`,
-            detail: 'The update has been downloaded. Click "Install" to open the installer.',
-            buttons: ['Install Now', 'Show in Finder', 'Later'],
-            defaultId: 0
+            title: 'Update Downloaded',
+            message: `Messengerify ${version} is ready to install`,
+            detail: 'Installation steps:\n\n1. Click "Install & Quit" below\n2. Open the downloaded file\n3. Drag Messengerify to Applications folder\n4. Launch the updated app\n\nThe current app will quit to allow replacement.',
+            buttons: ['Install & Quit', 'Later'],
+            defaultId: 0,
+            cancelId: 1
           });
 
           if (response.response === 0) {
-            // Install now - open DMG/ZIP
+            // Open the installer file
             shell.openPath(filePath);
-          } else if (response.response === 1) {
-            // Show in Finder
-            shell.showItemInFolder(filePath);
+
+            // Wait a moment for the file to open, then quit
+            setTimeout(() => {
+              app.quit();
+            }, 1000);
           }
         }
       } catch (error) {
