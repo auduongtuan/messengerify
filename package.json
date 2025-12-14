@@ -29,6 +29,27 @@
         "NSMicrophoneUsageDescription": "Let Messengerify use your microphone for calls"
       }
     },
+    "dmg": {
+      "title": "Install Messengerify",
+      "icon": "assets/icon.icns",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 144,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 396,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "files": [
       "dist/**/*",
       "assets/**/*",
