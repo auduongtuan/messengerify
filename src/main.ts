@@ -1,10 +1,35 @@
-import { app, BrowserWindow, screen, shell } from 'electron';
+import { app, BrowserWindow, screen, shell, Menu, clipboard } from 'electron';
 import * as path from 'path';
 
 // Enable hot reload in development
 try {
   require('electron-reloader')(module);
 } catch (_) {}
+
+// Use separate userData directory for development to avoid conflicts
+if (!app.isPackaged) {
+  const userDataPath = app.getPath('userData');
+  app.setPath('userData', `${userDataPath}-dev`);
+  console.log('Development mode: Using separate userData directory');
+}
+
+// Single instance lock - prevent multiple instances from running
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  console.log('Another instance is already running. Quitting...');
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, focus our window instead
+    const windows = BrowserWindow.getAllWindows();
+    if (windows.length > 0) {
+      const mainWindow = windows[0];
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
 
 function createWindow(): void {
   // Get screen size and calculate window dimensions
@@ -54,6 +79,90 @@ function createWindow(): void {
     // Prevent navigation and open in external browser instead
     event.preventDefault();
     shell.openExternal(url);
+  });
+
+  // Context menu handler
+  win.webContents.on('context-menu', (event, params) => {
+    const menuTemplate: Electron.MenuItemConstructorOptions[] = [];
+
+    // Text selection menu items
+    if (params.selectionText) {
+      menuTemplate.push({
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        click: () => {
+          clipboard.writeText(params.selectionText);
+        }
+      });
+
+      menuTemplate.push({
+        label: 'Search with Google',
+        click: () => {
+          const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(params.selectionText)}`;
+          shell.openExternal(searchUrl);
+        }
+      });
+    }
+
+    // Image menu items
+    if (params.mediaType === 'image') {
+      if (menuTemplate.length > 0) {
+        menuTemplate.push({ type: 'separator' });
+      }
+
+      menuTemplate.push({
+        label: 'Copy Image',
+        click: () => {
+          win.webContents.copyImageAt(params.x, params.y);
+        }
+      });
+
+      menuTemplate.push({
+        label: 'Save Image',
+        click: () => {
+          win.webContents.downloadURL(params.srcURL);
+        }
+      });
+    }
+
+    // Input field menu items
+    if (params.isEditable) {
+      if (menuTemplate.length > 0) {
+        menuTemplate.push({ type: 'separator' });
+      }
+
+      menuTemplate.push({
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        click: () => {
+          win.webContents.paste();
+        }
+      });
+
+      if (params.selectionText) {
+        menuTemplate.push({
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          click: () => {
+            win.webContents.cut();
+          }
+        });
+      }
+
+      menuTemplate.push({
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        click: () => {
+          win.webContents.selectAll();
+        }
+      });
+    }
+
+    // Show context menu if there are items
+    if (menuTemplate.length > 0) {
+      const contextMenu = Menu.buildFromTemplate(menuTemplate);
+      contextMenu.popup();
+    }
   });
 
   // Add draggable area at the top and hide feed section
