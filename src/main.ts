@@ -1,10 +1,15 @@
 import { app, BrowserWindow, screen, shell, Menu, clipboard } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 
 // Enable hot reload in development
 try {
   require('electron-reloader')(module);
 } catch (_) {}
+
+// Configure auto-updater
+autoUpdater.autoDownload = true; // Download updates automatically
+autoUpdater.autoInstallOnAppQuit = true; // Install on quit
 
 // Use separate userData directory for development to avoid conflicts
 if (!app.isPackaged) {
@@ -244,6 +249,42 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   createWindow();
+
+  // Check for updates (only in production)
+  if (app.isPackaged) {
+    // Check for updates on startup
+    autoUpdater.checkForUpdatesAndNotify();
+
+    // Check for updates every 4 hours (commented out - only check on startup)
+    // setInterval(() => {
+    //   autoUpdater.checkForUpdates();
+    // }, 4 * 60 * 60 * 1000);
+
+    // Update event handlers
+    autoUpdater.on('checking-for-update', () => {
+      console.log('Checking for updates...');
+    });
+
+    autoUpdater.on('update-available', (info) => {
+      console.log('Update available:', info.version);
+    });
+
+    autoUpdater.on('update-not-available', (info) => {
+      console.log('Update not available:', info.version);
+    });
+
+    autoUpdater.on('download-progress', (progressObj) => {
+      console.log(`Download progress: ${progressObj.percent.toFixed(2)}%`);
+    });
+
+    autoUpdater.on('update-downloaded', (info) => {
+      console.log('Update downloaded, will install on quit:', info.version);
+    });
+
+    autoUpdater.on('error', (err) => {
+      console.error('Update error:', err);
+    });
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

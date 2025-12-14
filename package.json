@@ -9,7 +9,11 @@
     "start": "npm run compile && electron .",
     "dev": "npm run compile && electron .",
     "build": "npm run compile && electron-builder",
-    "build:mac": "npm run compile && electron-builder --mac"
+    "build:mac": "npm run compile && electron-builder --mac",
+    "release": "npm run compile && electron-builder --mac --publish always",
+    "version:patch": "npm version patch && git push --follow-tags",
+    "version:minor": "npm version minor && git push --follow-tags",
+    "version:major": "npm version major && git push --follow-tags"
   },
   "keywords": ["messenger", "electron", "desktop"],
   "author": "",
@@ -26,13 +30,19 @@
       "dist/**/*",
       "assets/**/*",
       "package.json"
-    ]
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "auduongtuan",
+      "repo": "messengerify"
+    }
   },
   "devDependencies": {
     "@types/node": "^25.0.0",
     "electron": "^39.2.6",
     "electron-builder": "^26.0.12",
     "electron-reloader": "^1.2.3",
+    "electron-updater": "^6.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
