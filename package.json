@@ -1,33 +1,8 @@
 {
   "name": "messenger-desktop",
-  "productName": "Messengerify",
-  "version": "1.0.0",
-  "description": "Unofficial desktop wrapper for Messenger.com",
-  "main": "dist/main.js",
-  "scripts": {
-    "compile": "tsc",
-    "start": "npm run compile && electron .",
-    "dev": "npm run compile && electron .",
-    "build": "npm run compile && electron-builder",
-    "build:mac": "npm run compile && electron-builder --mac"
-  },
-  "keywords": ["messenger", "electron", "desktop"],
+  "version": "0.0.2",
   "author": "",
-  "license": "MIT",
-  "build": {
-    "appId": "com.messengerify.app",
-    "productName": "Messengerify",
-    "mac": {
-      "category": "public.app-category.social-networking",
-      "icon": "assets/icon.icns",
-      "target": ["dmg", "zip"]
-    },
-    "files": [
-      "dist/**/*",
-      "assets/**/*",
-      "package.json"
-    ]
-  },
+  "main": "dist/main.js",
   "devDependencies": {
     "@types/node": "^25.0.0",
     "electron": "^39.2.6",
@@ -35,5 +10,79 @@
     "electron-reloader": "^1.2.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "build": {
+    "appId": "com.messengerify.app",
+    "productName": "Messengerify",
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "assets/icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "Let Messengerify control other applications",
+        "NSCameraUsageDescription": "Let Messengerify use your camera for video calls",
+        "NSMicrophoneUsageDescription": "Let Messengerify use your microphone for calls"
+      }
+    },
+    "dmg": {
+      "title": "Install Messengerify",
+      "icon": "assets/icon.icns",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 144,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 396,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "assets/**/*",
+      "package.json",
+      "!**/*.ts",
+      "!src",
+      "!*.md",
+      "!.env*",
+      "!tsconfig.json"
+    ],
+    "asarUnpack": [],
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    }
+  },
+  "description": "Unofficial desktop wrapper for Messenger.com",
+  "keywords": [
+    "messenger",
+    "electron",
+    "desktop"
+  ],
+  "license": "MIT",
+  "productName": "Messengerify",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && electron .",
+    "dev": "npm run compile && electron .",
+    "build": "npm run compile && electron-builder",
+    "build:mac": "npm run compile && electron-builder --mac",
+    "release": "npm run compile && electron-builder --mac --publish always",
+    "version:patch": "npm version patch && git push --follow-tags",
+    "version:minor": "npm version minor && git push --follow-tags",
+    "version:major": "npm version major && git push --follow-tags"
   }
 }
